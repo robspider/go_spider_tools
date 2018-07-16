@@ -1,5 +1,4 @@
 /.project
 /.idea
-Gopkg.lock
 /**/Config.go
 /vendor

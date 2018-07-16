@@ -3,10 +3,10 @@ package bloomfilter_util
 import (
 	"github.com/willf/bloom"
 	"database/sql"
-	"frank/gosipder/tools/gorpool"
 	"time"
 	"log"
 	"strconv"
+	"github.com/go_spider_tools/tools/gorpool"
 )
 
 func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_name, uuid_colum_name string) {
