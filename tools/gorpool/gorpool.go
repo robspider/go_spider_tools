@@ -70,8 +70,8 @@ func (w *worker) start() {
 func (dis *dispatcher) dispatch() {
 	for {
 		select {
-		case job := <-dis.jobQueue:
-			worker := <-dis.workerPool
+		case job := <- dis.jobQueue:
+			worker := <- dis.workerPool
 			worker.jobQueue <- job
 		case <-dis.stop:
 			for i := 0; i < cap(dis.workerPool); i++ {
@@ -99,6 +99,7 @@ func NewPool(workerNum, jobNum int) *Pool {
 		enableWaitForAll: false,
 		workerNum:workerNum,
 		jobNum:jobNum,
+		wg : sync.WaitGroup{},
 	}
 
 	return pool
@@ -107,20 +108,22 @@ func NewPool(workerNum, jobNum int) *Pool {
 
 //Add one job to job pool
 func (p *Pool) AddJob(job Job) {
-	if p.enableWaitForAll {
-		p.wg.Add(1)
-	}
+
 	p.dispatcher.jobQueue <- func() {
+		if p.enableWaitForAll {
+			p.wg.Add(1)
+		}
 		job()
 		if p.enableWaitForAll {
 			p.wg.Done()
 		}
 	}
+	//log.Printf("len(p.dispatcher.jobQueue):%d",len(p.dispatcher.jobQueue))
 	if len(p.dispatcher.jobQueue) >0{
 		if p.workerCount < p.workerNum {
 			worker := newWorker(p.dispatcher.workerPool)
-			go worker.start()
 			p.workerCount++
+			go worker.start()
 		}
 	}
 }

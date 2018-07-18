@@ -6,7 +6,19 @@ import (
 	"runtime"
 	"testing"
 	"time"
+	"log"
 )
+
+func TestOne(t *testing.T)  {
+	p := NewPool(2,100).EnableWaitForAll(true)
+	p.Start()
+	p.AddJob(func() {
+		log.Printf("asdfasdf")
+	})
+
+	p.WaitForAll()
+	p.StopAll()
+}
 
 func TestNewPool(t *testing.T) {
 	p := NewPool(5, 10).Start()
