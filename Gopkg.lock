@@ -8,6 +8,12 @@
   version = "v1.3.0"
 
 [[projects]]
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
+[[projects]]
   name = "github.com/spaolacci/murmur3"
   packages = ["."]
   revision = "9f5d223c60793748f04a9d5b4b4eacddfc1f755d"
@@ -28,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8eafc48ac9399b32238eadf6a26b47171f0b9cd6c9ef36e3c9b4a947012b37db"
+  inputs-digest = "61b165f8bfd063b729842760ed893ca1c331f06143987cabc58d99eb25a794ee"
   solver-name = "gps-cdcl"
   solver-version = 1

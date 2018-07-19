@@ -10,7 +10,7 @@ import (
 )
 
 func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_name, uuid_colum_name string) {
-	work_num := 200
+	work_num := 800
     var p0 int64 = time.Now().UnixNano()
 	log.Println("start init BloomFilter ")
     var bloom_filter_pool *gorpool.Pool
@@ -18,6 +18,9 @@ func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_
 	row := db.QueryRow("select count(1) from " + table_name)
 	row.Scan(&count)
 	log.Printf("总数据量：%d",count)
+	if(count == 0 ) {
+		return
+	}
 	if(count < work_num) {
 		bloom_filter_pool = gorpool.NewPool(count, pagesize*10).EnableWaitForAll(true).Start()
 	}else{
@@ -26,9 +29,8 @@ func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_
 	var num int = count / pagesize
 	for i := 0; i <= num; i++ {
 		sql_str  := "select " + uuid_colum_name + " from " + table_name + " order by id asc limit " + strconv.Itoa(pagesize*i) + "," + strconv.Itoa(pagesize)
-		log.Println(sql_str)
 		bloom_filter_pool.AddJob(func() {
-			updateBloomFilter(sql_str,db,bloom_filter_pool,filter)
+			updateBloomFilter(sql_str,db,bloom_filter_pool,filter,&count)
 		})
 	}
 	bloom_filter_pool.WaitForAll()
@@ -37,7 +39,7 @@ func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_
 	log.Println("布隆过滤器初始化完成，数据总量：" + strconv.Itoa(count) + ",耗时：" + strconv.FormatInt((p1-p0)/1000/1000, 10) + "ms")
 }
 
-func updateBloomFilter(sql_str string,db *sql.DB,bloom_filter_pool *gorpool.Pool,filter *bloom.BloomFilter){
+func updateBloomFilter(sql_str string,db *sql.DB,bloom_filter_pool *gorpool.Pool,filter *bloom.BloomFilter,count *int){
 	rows, err := db.Query(sql_str)
 	if (err != nil) {
 		panic(err)
@@ -50,6 +52,10 @@ func updateBloomFilter(sql_str string,db *sql.DB,bloom_filter_pool *gorpool.Pool
 		}
 		bloom_filter_pool.AddJob(func() {
 			filter.AddString(uuid)
+			*count = *count -1
+			if(*count%10000 == 0){
+				log.Printf("余量:%d",*count)
+			}
 		})
 	}
 	rows.Close()
