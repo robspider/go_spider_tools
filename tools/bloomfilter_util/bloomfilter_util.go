@@ -10,7 +10,7 @@ import (
 )
 
 func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_name, uuid_colum_name string) {
-	work_num := 800
+	work_num := 48
     var p0 int64 = time.Now().UnixNano()
 	log.Println("start init BloomFilter ")
     var bloom_filter_pool *gorpool.Pool
@@ -33,6 +33,7 @@ func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_
 			updateBloomFilter(sql_str,db,bloom_filter_pool,filter,&count)
 		})
 	}
+	time.Sleep(1*time.Second)
 	bloom_filter_pool.WaitForAll()
 	bloom_filter_pool.StopAll()
 	var p1 int64 = time.Now().UnixNano()

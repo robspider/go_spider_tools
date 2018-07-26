@@ -10,14 +10,13 @@ import (
 )
 
 func TestOne(t *testing.T)  {
-	p := NewPool(2,100).EnableWaitForAll(true)
-	p.Start()
+	p := NewPool(100,100).EnableWaitForAll(true).Start()
 	p.AddJob(func() {
-		log.Printf("asdfasdf")
+		log.Println("asdfasdf")
 	})
-
+	time.Sleep(time.Second)
 	p.WaitForAll()
-	p.StopAll()
+	//p.StopAll()
 }
 
 func TestNewPool(t *testing.T) {

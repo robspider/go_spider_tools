@@ -3,6 +3,8 @@ package gorpool
 
 import (
 "sync"
+	"time"
+	"log"
 )
 
 //Job function
@@ -20,6 +22,7 @@ type Pool struct {
 	workerNum int
 	jobNum int
 	workerCount int
+	time_start time.Time
 }
 
 /**
@@ -130,7 +133,12 @@ func (p *Pool) AddJob(job Job) {
 
 func (p *Pool) WaitForAll() {
 	if p.enableWaitForAll {
+		for i:=0;i<p.workerNum;i++{
+			p.AddJob(func() {})
+		}
 		p.wg.Wait()
+		p1 := time.Now()
+		log.Printf("本次执行耗时：%dms",(p1.UnixNano()-p.time_start.UnixNano())/1000/1000)
 	}
 }
 
@@ -147,6 +155,7 @@ func (p *Pool) EnableWaitForAll(enable bool) *Pool {
 
 //Start worker pool and dispatch
 func (p *Pool) Start() *Pool {
+	p.time_start = time.Now()
 	go p.dispatcher.dispatch()
 	return p
 }

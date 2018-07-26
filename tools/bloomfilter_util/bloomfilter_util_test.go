@@ -5,7 +5,7 @@ import (
 	"github.com/willf/bloom"
 	"github.com/robspider/go_spider_tools/tools/sql_util/datasource_config"
 	"github.com/robspider/go_spider_tools/tools"
-	"github.com/satori/go.uuid"
+	"log"
 )
 
 func TestInitBloomFilter(t *testing.T) {
@@ -17,7 +17,10 @@ func TestInitBloomFilter(t *testing.T) {
 	con.Host = tools.Mysql_host
 	con.Port = tools.Mysql_port
 	con.Db = "lrw360-map"
-	db,_ := con.ConnectMysql()
+	db,err := con.ConnectMysql()
+	if(err != nil) {
+		log.Println(err)
+	}
 
 	InitBloomFilter(filter,db,40000,"tb_company_text_hc_h5","uuid")
 }
@@ -35,20 +38,3 @@ func Test2(t *testing.T)  {
 	InitBloomFilter(filter,db,40000,"tb_spider_company_describe_hc","describe_id")
 }
 
-func BenchmarkInitBloomFilter(b *testing.B) {
-	b.RunParallel(func(pb *testing.PB) {
-		filter := bloom.New(uint(10000000),32)
-		for pb.Next(){
-			u := uuid.NewV4()
-			filter.Add(u.Bytes())
-		}
-	})
-}
-
-func BenchmarkUuid(b *testing.B) {
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next(){
-			uuid.NewV4().Bytes()
-		}
-	})
-}

@@ -8,16 +8,22 @@
   version = "v1.3.0"
 
 [[projects]]
-  name = "github.com/satori/go.uuid"
-  packages = ["."]
-  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
-  version = "v1.2.0"
-
-[[projects]]
   name = "github.com/spaolacci/murmur3"
   packages = ["."]
   revision = "9f5d223c60793748f04a9d5b4b4eacddfc1f755d"
   version = "v1.1"
+
+[[projects]]
+  name = "github.com/tidwall/gjson"
+  packages = ["."]
+  revision = "f123b340873a0084cb27267eddd8ff615115fbff"
+  version = "v1.1.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/tidwall/match"
+  packages = ["."]
+  revision = "1731857f09b1f38450e2c12409748407822dc6be"
 
 [[projects]]
   name = "github.com/willf/bitset"
@@ -31,9 +37,21 @@
   revision = "54e3b963ee1652b06c4562cb9b6020ebc6e36e59"
   version = "v2.0.3"
 
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/mgo.v2"
+  packages = [
+    ".",
+    "bson",
+    "internal/json",
+    "internal/sasl",
+    "internal/scram"
+  ]
+  revision = "9856a29383ce1c59f308dd1cf0363a79b5bef6b5"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "61b165f8bfd063b729842760ed893ca1c331f06143987cabc58d99eb25a794ee"
+  inputs-digest = "f1498f43ab3fa85ba84278f19d42046ac2b4e9f87cd01dcdee787b2a2766326e"
   solver-name = "gps-cdcl"
   solver-version = 1
