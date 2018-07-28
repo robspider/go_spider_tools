@@ -29,7 +29,7 @@ type Pool struct {
 	当前执行中数量
  */
 func (p *Pool) GetPoolWorkCount() int{
-	return p.workerCount
+	return len(p.dispatcher.workerPool)
 }
 
 /**
@@ -111,11 +111,10 @@ func NewPool(workerNum, jobNum int) *Pool {
 
 //Add one job to job pool
 func (p *Pool) AddJob(job Job) {
-
+	if p.enableWaitForAll {
+		p.wg.Add(1)
+	}
 	p.dispatcher.jobQueue <- func() {
-		if p.enableWaitForAll {
-			p.wg.Add(1)
-		}
 		job()
 		if p.enableWaitForAll {
 			p.wg.Done()
