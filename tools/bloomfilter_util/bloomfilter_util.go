@@ -40,6 +40,8 @@ func InitBloomFilter(filter *bloom.BloomFilter, db *sql.DB, pagesize int, table_
 	log.Println("布隆过滤器初始化完成，数据总量：" + strconv.Itoa(count) + ",耗时：" + strconv.FormatInt((p1-p0)/1000/1000, 10) + "ms")
 }
 
+
+
 func updateBloomFilter(sql_str string,db *sql.DB,bloom_filter_pool *gorpool.Pool,filter *bloom.BloomFilter,count *int){
 	rows, err := db.Query(sql_str)
 	if (err != nil) {

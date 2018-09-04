@@ -21,8 +21,7 @@ func TestInitBloomFilter(t *testing.T) {
 	if(err != nil) {
 		log.Println(err)
 	}
-
-	InitBloomFilter(filter,db,40000,"tb_company_text_hc_h5","uuid")
+	InitBloomFilter(filter,db,40000,"tb_company_text_sole_web","company_id")
 }
 
 func Test2(t *testing.T)  {
